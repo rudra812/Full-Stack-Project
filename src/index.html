@@ -18,6 +18,17 @@
          $.get('http://localhost:8085/searching',function(data){
             console.log(data);
          });
+
+         var httpReq = $.ajax({
+            method: "POST",
+            url: "http://localhost:8085/login",
+            data: { user:"614673", password:"weqeqweqwe" } ,
+            crossDomain:true,           
+        }).done(function(data){
+            console.log(data);
+         }).fail(function(err){
+            console.log("failure");
+         });
     });         
     </script>    
 </body>

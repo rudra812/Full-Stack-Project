@@ -16,6 +16,8 @@
     "mongodb": "~2.0"
   },
   "devDependencies": {
+    "body-parser": "^1.17.1",
+    "cors": "^2.8.3",
     "gulp": "^3.9.1",
     "gulp-cli": "^1.2.2",
     "gulp-watch": "^4.3.11",
