@@ -1,6 +1,36 @@
 var express = require('express');
 var cors = require('cors');
 var router = express.Router();
+var MONGOOSE = require('MONGOOSE');
+var process = require('process');
+var AddressModel = require("./mongoApp/model/address");
+var employeeModel = require("./mongoApp/model/employee");
+// Connection URL
+var url = 'mongodb://localhost:27017/my_database';
+// Use connect method to connect to the Server
+
+MONGOOSE.connection.on('connected', function () {  
+  console.log('MONGOOSE default connection open to ' + url); 
+}); 
+
+// If the connection throws an error
+MONGOOSE.connection.on('error',function (err) {  
+  console.log('MONGOOSE default connection error: ' + err);
+}); 
+
+// When the connection is disconnected
+MONGOOSE.connection.on('disconnected', function () {  
+  console.log('MONGOOSE default connection disconnected'); 
+});
+
+process.on('SIGINT', function(){
+    MONGOOSE.connection.close(function(){
+         console.log('MONGOOSE default connection process Terminated'); 
+         process.exit(0);
+    });
+});
+
+
 var requestTime = function (req, res, next) {
    req.requestTime = new Date(Date.now());
    next();
@@ -12,13 +42,23 @@ var requestTime = function (req, res, next) {
  router.post('/login',cors(),function(req,res){
    var user_id = req.body['user'];
    var pwd = req.body['password']; 
-   if(user_id !== "614673"){
-       return res.status(400).send({
-           message: 'This is an error!'
-       });
-   }   
-   res.status(200).send({
-     message:"Logged in " + req.requestTime
-   });
+   MONGOOSE.connect(url);
+//    if(user_id !== "614673"){
+//        return res.status(400).send({
+//            message: 'This is an error!'
+//        });
+//    }   
+//    res.status(200).send({
+//      message:"Logged in " + req.requestTime
+//    });
+    MONGOOSE.model('Employee').find(function(err,users){
+      console.log(users); 
+      MONGOOSE.connect(url); 
+      MONGOOSE.connection.close();  
+      res.send({
+        message:"Logged in " + req.requestTime,
+        data:users
+      });  
+    });
  });
  module.exports = router;
