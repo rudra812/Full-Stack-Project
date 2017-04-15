@@ -43,17 +43,8 @@ var requestTime = function (req, res, next) {
    var user_id = req.body['user'];
    var pwd = req.body['password']; 
    MONGOOSE.connect(url);
-//    if(user_id !== "614673"){
-//        return res.status(400).send({
-//            message: 'This is an error!'
-//        });
-//    }   
-//    res.status(200).send({
-//      message:"Logged in " + req.requestTime
-//    });
-    MONGOOSE.model('Employee').find(function(err,users){
-      console.log(users); 
-      MONGOOSE.connect(url); 
+    employeeModel.find({empID:Number(user_id)},function(err,users){
+      console.log(users);
       MONGOOSE.connection.close();  
       res.send({
         message:"Logged in " + req.requestTime,
